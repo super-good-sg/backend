@@ -16,6 +16,7 @@ _What was run and any manual verification._
 
 ## Checklist
 
+- [ ] Branch name follows `type/SIE-xxx/short-summary`
 - [ ] PR title follows `type(SIE-xxx): message`
 - [ ] Self-reviewed the diff
 - [ ] No secrets, no debug leftovers, no new dependency without approval
