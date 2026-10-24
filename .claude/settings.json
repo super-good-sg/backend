@@ -10,13 +10,13 @@
       "Bash(gh pr checks *)",
       "Bash(gh pr list *)",
       "Bash(gh run view *)",
-      "Bash(npm test)"
-    ],
-    "ask": [
+      "Bash(npm test)",
       "Bash(git push *)",
       "Bash(gh pr create *)",
       "Bash(gh pr ready *)",
-      "Bash(gh pr edit *)",
+      "Bash(gh pr edit *)"
+    ],
+    "ask": [
       "Bash(npm ci)",
       "Bash(npm install *)",
       "Bash(curl *)",
