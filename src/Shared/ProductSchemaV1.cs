@@ -6,7 +6,9 @@ namespace SuperGood.Shared;
 public sealed record ProductV1
 {
     public int SchemaVersion { get; init; } = 1;
-    public Guid? CatalogItemId { get; init; }
+
+    /// <summary>Required by the schema even while null (new item, no catalog match).</summary>
+    public required Guid? CatalogItemId { get; init; }
     public required string Name { get; init; }
     public required string Unit { get; init; }
     public required decimal Price { get; init; }

@@ -46,6 +46,26 @@ SIE-39 design.
   product). No JSON Schema codegen tool is introduced — hand-written POCOs
   are simpler to review for four small schemas and avoid adding a new
   build dependency for v1.
+  **Flagged during review**: this conflicts with ADR 0001 ("each code repo
+  pins the contract version it follows" via a generated-code + pin-file
+  convention, PR-checked for drift). That ADR has no recorded owner
+  reverification and its implementing spec
+  (`document-specs/specs/001-contract-drift-detection/`) is still Draft —
+  no repo anywhere has a pin file or generator today. Building that
+  pipeline is out of scope for this scaffold change; this needs an
+  explicit owner decision (confirm the hand-written approach for v1, or
+  require the generator+pin setup before any contract-mirroring code
+  lands). Left open here rather than decided unilaterally.
+  Type-fidelity gaps a future generator (or further hand-maintenance)
+  would need to close, found in review and not fixed in this change
+  because they're serialization-behavior concerns with no JSON call site
+  yet in this diff: enums serialize as integers by default, not the
+  schema's lowercase strings; optional-but-not-required string fields
+  (e.g. `OrderContactV1.Phone`/`Address`) serialize an explicit `null`
+  where the schema expects the key omitted. Schema-required-but-nullable
+  fields (`ConfirmedAt`, `ContactId`, `CatalogItemId`) were fixed in this
+  change (`required` added) since that's a type-definition correctness
+  fix, not a serialization-behavior one.
 - **Health endpoint via minimal API, not the `Microsoft.Extensions.Diagnostics.HealthChecks`
   package**: a single `app.MapGet("/health", () => Results.Ok())` meets
   the liveness-only requirement without pulling in a package whose main

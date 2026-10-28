@@ -17,7 +17,9 @@ public sealed record OrderV1
     public OrderConfidenceV1? Confidence { get; init; }
     public required DateTimeOffset CreatedAt { get; init; }
     public required DateTimeOffset UpdatedAt { get; init; }
-    public DateTimeOffset? ConfirmedAt { get; init; }
+
+    /// <summary>Required by the schema even while null (status is pending).</summary>
+    public required DateTimeOffset? ConfirmedAt { get; init; }
 }
 
 public enum OrderDirection
@@ -41,7 +43,8 @@ public enum SourceLanguage
 
 public sealed record OrderContactV1
 {
-    public Guid? ContactId { get; init; }
+    /// <summary>Required by the schema even while null (no matching catalog contact).</summary>
+    public required Guid? ContactId { get; init; }
     public required string Name { get; init; }
     public string? Phone { get; init; }
     public string? Address { get; init; }
@@ -49,7 +52,8 @@ public sealed record OrderContactV1
 
 public sealed record OrderItemV1
 {
-    public Guid? CatalogItemId { get; init; }
+    /// <summary>Required by the schema even while null (item not yet in the catalog).</summary>
+    public required Guid? CatalogItemId { get; init; }
     public required string Name { get; init; }
     public required decimal Qty { get; init; }
     public required string Unit { get; init; }
