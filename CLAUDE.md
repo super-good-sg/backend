@@ -7,14 +7,18 @@ Super Good backend.
 - The spec, contract or ADR linked from your Linear ticket (project SuperGood). Linear is the source of truth for work.
 
 ## Commands
-- Build: TODO (set when the solution is scaffolded)
-- Test: TODO
-- Lint: TODO
+- Build: `dotnet build` (root `backend.sln`).
+- Test: TODO (no test project yet).
+- Lint: TODO (no linter configured yet).
+- Local dev stack (Postgres, Keycloak): see `docs/local-dev.md`.
 
 ## Folder map
 - `openspec/`: OpenSpec specs and changes (`openspec/changes/`, `openspec/specs/`).
 - `.claude/`, `.agents/`: agent skills and commands (OpenSpec-managed).
-- Source folders: TODO (added by the scaffold ticket).
+- `src/Shared/`: C# types mirroring the document-specs JSON contracts.
+- `src/Orders.Service/`, `src/Catalog.Service/`, `src/Jobs.Service/`: one
+  ASP.NET Core project per service (ADR 0005). Each service project must
+  only reference `Shared`, never another service project.
 
 ## Where things live
 Specs, ADRs and contracts (OpenAPI, order schema) all live in [document-specs](https://github.com/super-good-sg/document-specs). See the [standard](https://github.com/super-good-sg/document-specs/blob/main/docs/claude-md-standard.md#where-things-live-all-in-document-specs) for paths.
