@@ -24,6 +24,8 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
                 t.HasCheckConstraint("ck_orders_status", "\"Status\" IN ('Pending', 'Confirmed')");
                 t.HasCheckConstraint("ck_orders_source_language", "\"SourceLanguage\" IN ('Vi', 'En', 'Mixed')");
                 t.HasCheckConstraint("ck_orders_confirmed_at", "(\"Status\" = 'Confirmed') = (\"ConfirmedAt\" IS NOT NULL)");
+                t.HasCheckConstraint("ck_orders_contact_name", "\"ContactName\" <> ''");
+                t.HasCheckConstraint("ck_orders_currency", "\"Currency\" ~ '^[A-Z]{3}$'");
                 t.HasCheckConstraint("ck_orders_money", "\"Subtotal\" >= 0 AND \"TaxTotal\" >= 0 AND \"Total\" >= 0");
             });
             e.HasKey(o => o.Id);
@@ -45,6 +47,7 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) :
         {
             e.ToTable("order_items", t =>
             {
+                t.HasCheckConstraint("ck_order_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
                 t.HasCheckConstraint("ck_order_items_qty", "\"Qty\" > 0");
                 t.HasCheckConstraint("ck_order_items_money", "\"Price\" >= 0 AND \"TaxRate\" >= 0 AND \"TaxAmount\" >= 0 AND \"LineTotal\" >= 0");
             });

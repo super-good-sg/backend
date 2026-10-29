@@ -12,7 +12,7 @@ using SuperGood.Catalog.Persistence;
 namespace Catalog.Service.Persistence.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20261029100851_InitialSchema")]
+    [Migration("20261029101820_InitialSchema")]
     partial class InitialSchema
     {
         /// <inheritdoc />
@@ -65,6 +65,8 @@ namespace Catalog.Service.Persistence.Migrations
 
                     b.ToTable("catalog_items", "catalog", t =>
                         {
+                            t.HasCheckConstraint("ck_catalog_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
+
                             t.HasCheckConstraint("ck_catalog_items_price", "\"Price\" >= 0");
                         });
                 });
@@ -105,6 +107,8 @@ namespace Catalog.Service.Persistence.Migrations
 
                     b.ToTable("contacts", "catalog", t =>
                         {
+                            t.HasCheckConstraint("ck_contacts_name", "\"Name\" <> ''");
+
                             t.HasCheckConstraint("ck_contacts_type", "\"Type\" IN ('Customer', 'Supplier')");
                         });
                 });

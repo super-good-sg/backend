@@ -41,6 +41,8 @@ namespace Orders.Service.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_orders", x => x.Id);
                     table.CheckConstraint("ck_orders_confirmed_at", "(\"Status\" = 'Confirmed') = (\"ConfirmedAt\" IS NOT NULL)");
+                    table.CheckConstraint("ck_orders_contact_name", "\"ContactName\" <> ''");
+                    table.CheckConstraint("ck_orders_currency", "\"Currency\" ~ '^[A-Z]{3}$'");
                     table.CheckConstraint("ck_orders_direction", "\"Direction\" IN ('Sale', 'Purchase')");
                     table.CheckConstraint("ck_orders_money", "\"Subtotal\" >= 0 AND \"TaxTotal\" >= 0 AND \"Total\" >= 0");
                     table.CheckConstraint("ck_orders_source_language", "\"SourceLanguage\" IN ('Vi', 'En', 'Mixed')");
@@ -68,6 +70,7 @@ namespace Orders.Service.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_order_items", x => new { x.OrderId, x.Position });
                     table.CheckConstraint("ck_order_items_money", "\"Price\" >= 0 AND \"TaxRate\" >= 0 AND \"TaxAmount\" >= 0 AND \"LineTotal\" >= 0");
+                    table.CheckConstraint("ck_order_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
                     table.CheckConstraint("ck_order_items_qty", "\"Qty\" > 0");
                     table.ForeignKey(
                         name: "FK_order_items_orders_OrderId",
@@ -89,6 +92,17 @@ namespace Orders.Service.Persistence.Migrations
                 schema: "orders",
                 table: "orders",
                 columns: new[] { "OwnerId", "Status", "CreatedAt" });
+
+            // The default privileges in the bootstrap script give the runtime role DML on
+            // every table; it must not touch the migration history (ADR 0005).
+            migrationBuilder.Sql(
+                """
+                DO $$ BEGIN
+                    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'orders_svc') THEN
+                        REVOKE ALL ON TABLE orders."__EFMigrationsHistory" FROM orders_svc;
+                    END IF;
+                END $$;
+                """);
         }
 
         /// <inheritdoc />

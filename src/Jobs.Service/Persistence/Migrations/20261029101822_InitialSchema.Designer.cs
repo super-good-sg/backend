@@ -12,7 +12,7 @@ using SuperGood.Jobs.Persistence;
 namespace Jobs.Service.Persistence.Migrations
 {
     [DbContext(typeof(JobsDbContext))]
-    [Migration("20261029100853_InitialSchema")]
+    [Migration("20261029101822_InitialSchema")]
     partial class InitialSchema
     {
         /// <inheritdoc />

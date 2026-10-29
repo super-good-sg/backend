@@ -48,6 +48,17 @@ namespace Jobs.Service.Persistence.Migrations
                 schema: "jobs",
                 table: "jobs",
                 column: "Status");
+
+            // The default privileges in the bootstrap script give the runtime role DML on
+            // every table; it must not touch the migration history (ADR 0005).
+            migrationBuilder.Sql(
+                """
+                DO $$ BEGIN
+                    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'jobs_svc') THEN
+                        REVOKE ALL ON TABLE jobs."__EFMigrationsHistory" FROM jobs_svc;
+                    END IF;
+                END $$;
+                """);
         }
 
         /// <inheritdoc />

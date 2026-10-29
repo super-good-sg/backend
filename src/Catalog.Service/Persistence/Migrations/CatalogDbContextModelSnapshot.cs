@@ -62,6 +62,8 @@ namespace Catalog.Service.Persistence.Migrations
 
                     b.ToTable("catalog_items", "catalog", t =>
                         {
+                            t.HasCheckConstraint("ck_catalog_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
+
                             t.HasCheckConstraint("ck_catalog_items_price", "\"Price\" >= 0");
                         });
                 });
@@ -102,6 +104,8 @@ namespace Catalog.Service.Persistence.Migrations
 
                     b.ToTable("contacts", "catalog", t =>
                         {
+                            t.HasCheckConstraint("ck_contacts_name", "\"Name\" <> ''");
+
                             t.HasCheckConstraint("ck_contacts_type", "\"Type\" IN ('Customer', 'Supplier')");
                         });
                 });

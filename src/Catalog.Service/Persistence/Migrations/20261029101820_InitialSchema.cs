@@ -31,6 +31,7 @@ namespace Catalog.Service.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_catalog_items", x => x.Id);
+                    table.CheckConstraint("ck_catalog_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
                     table.CheckConstraint("ck_catalog_items_price", "\"Price\" >= 0");
                 });
 
@@ -51,6 +52,7 @@ namespace Catalog.Service.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_contacts", x => x.Id);
+                    table.CheckConstraint("ck_contacts_name", "\"Name\" <> ''");
                     table.CheckConstraint("ck_contacts_type", "\"Type\" IN ('Customer', 'Supplier')");
                 });
 
@@ -94,6 +96,17 @@ namespace Catalog.Service.Persistence.Migrations
                 schema: "catalog",
                 table: "price_history",
                 columns: new[] { "CatalogItemId", "ChangedAt" });
+
+            // The default privileges in the bootstrap script give the runtime role DML on
+            // every table; it must not touch the migration history (ADR 0005).
+            migrationBuilder.Sql(
+                """
+                DO $$ BEGIN
+                    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'catalog_svc') THEN
+                        REVOKE ALL ON TABLE catalog."__EFMigrationsHistory" FROM catalog_svc;
+                    END IF;
+                END $$;
+                """);
         }
 
         /// <inheritdoc />

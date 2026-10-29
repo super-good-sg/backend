@@ -12,7 +12,7 @@ using SuperGood.Orders.Persistence;
 namespace Orders.Service.Persistence.Migrations
 {
     [DbContext(typeof(OrdersDbContext))]
-    [Migration("20261029100849_InitialSchema")]
+    [Migration("20261029101818_InitialSchema")]
     partial class InitialSchema
     {
         /// <inheritdoc />
@@ -100,6 +100,10 @@ namespace Orders.Service.Persistence.Migrations
                         {
                             t.HasCheckConstraint("ck_orders_confirmed_at", "(\"Status\" = 'Confirmed') = (\"ConfirmedAt\" IS NOT NULL)");
 
+                            t.HasCheckConstraint("ck_orders_contact_name", "\"ContactName\" <> ''");
+
+                            t.HasCheckConstraint("ck_orders_currency", "\"Currency\" ~ '^[A-Z]{3}$'");
+
                             t.HasCheckConstraint("ck_orders_direction", "\"Direction\" IN ('Sale', 'Purchase')");
 
                             t.HasCheckConstraint("ck_orders_money", "\"Subtotal\" >= 0 AND \"TaxTotal\" >= 0 AND \"Total\" >= 0");
@@ -154,6 +158,8 @@ namespace Orders.Service.Persistence.Migrations
                     b.ToTable("order_items", "orders", t =>
                         {
                             t.HasCheckConstraint("ck_order_items_money", "\"Price\" >= 0 AND \"TaxRate\" >= 0 AND \"TaxAmount\" >= 0 AND \"LineTotal\" >= 0");
+
+                            t.HasCheckConstraint("ck_order_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
 
                             t.HasCheckConstraint("ck_order_items_qty", "\"Qty\" > 0");
                         });

@@ -81,4 +81,6 @@ pipeline in deployed environments. Services never migrate at startup.
   dotnet ef migrations script --idempotent --project src/Orders.Service
   ```
 
-Install the tool once with `dotnet tool install -g dotnet-ef`.
+Install the tool once with `dotnet tool install -g dotnet-ef --version 8.0.11` (match the
+EF Core package version). The `InitialSchema` migrations revoke the runtime role's
+access to `__EFMigrationsHistory`, so a service cannot rewrite migration bookkeeping.

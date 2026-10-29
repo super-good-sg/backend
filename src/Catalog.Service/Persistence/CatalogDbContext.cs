@@ -20,7 +20,10 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
         modelBuilder.Entity<Contact>(e =>
         {
             e.ToTable("contacts", t =>
-                t.HasCheckConstraint("ck_contacts_type", "\"Type\" IN ('Customer', 'Supplier')"));
+            {
+                t.HasCheckConstraint("ck_contacts_type", "\"Type\" IN ('Customer', 'Supplier')");
+                t.HasCheckConstraint("ck_contacts_name", "\"Name\" <> ''");
+            });
             e.HasKey(c => c.Id);
             e.Property(c => c.Type).HasConversion<string>().HasMaxLength(16);
             e.Property(c => c.Name).IsRequired();
@@ -30,7 +33,10 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
         modelBuilder.Entity<CatalogItem>(e =>
         {
             e.ToTable("catalog_items", t =>
-                t.HasCheckConstraint("ck_catalog_items_price", "\"Price\" >= 0"));
+            {
+                t.HasCheckConstraint("ck_catalog_items_name_unit", "\"Name\" <> '' AND \"Unit\" <> ''");
+                t.HasCheckConstraint("ck_catalog_items_price", "\"Price\" >= 0");
+            });
             e.HasKey(i => i.Id);
             e.Property(i => i.Name).IsRequired();
             e.Property(i => i.Unit).IsRequired();
